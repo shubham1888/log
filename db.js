@@ -1,120 +1,166 @@
 #!/usr/bin/env node
 const fs = require("node:fs")
+const config = require("./config")
 
-const set = (props) => {
-    if (fs.existsSync("log")) {
-        const res = fs.readFileSync(`log/log.json`, { encoding: 'utf8', flag: 'r' });
-        if (res) {
-            let parsedData = JSON.parse(res);
-            let arr = new Array();
-            parsedData.map((i) => { arr.push(i) })
-            arr.push(JSON.parse(props));
-            fs.writeFileSync(`log/log.json`, JSON.stringify(arr))
-            return JSON.parse(props).id;
-        } else {
-            fs.writeFileSync(`log/log.json`, "[]")
-        }
+let jsondata = []
+let datalocation = ``
+try {
+    // console.log(`./${config.dataFolder}/${config.dataFile}.${config.dateFileExtension}`)
+    datalocation = `./${config.dataFolder}/${config.dataFile}.${config.dateFileExtension}`
+    jsondata = require(datalocation)
+    // console.log(jsondata.length)
+    // console.log(jsondata)
+} catch (e) {
+    // console.log(jsondata.length)
+    // console.log(jsondata)
+    console.log("Data not found!");
+}
+
+const set = (data) => {
+    if (fs.existsSync(`./${config.dataFolder}`)) {
+        jsondata.push(data);
+        fs.writeFileSync(datalocation, JSON.stringify(jsondata))
+        return data.id
     } else {
-        fs.mkdir("log", { recursive: true }, (e, d) => {
+        fs.mkdir(`${config.dataFolder}`, { recursive: true }, (e, d) => {
             if (e) throw e;
-            console.log(`Using this log utility first time!`)
+            console.log(`Using this db first time!`)
         })
-        fs.writeFileSync(`log/log.json`, `[${props}]`)
-        return JSON.parse(props).id;
+        fs.writeFileSync(datalocation, `[${JSON.stringify(data)}]`)
+        return data.id;
     }
 }
 
-const get = (props) => {
-    if (fs.existsSync("log")) {
-        const res = fs.readFileSync(`log/log.json`, { encoding: 'utf8', flag: 'r' });
-        if (res) {
-            let parsedData = JSON.parse(res)
-            if (props === "") {
-                let arr = new Array();
-                parsedData.map((i) => {
-                    if (i.deleted === false) {
-                        arr.push(i)
-                    }
-                })
-                return arr;
-            } else {
-                return { msg: "Data not found" }
-            }
+const get = () => {
+    if (fs.existsSync(`./${config.dataFolder}`)) {
+        if (jsondata.length > 0) {
+            return jsondata;
         } else {
             console.log("Data not found")
         }
     } else {
-        console.log("Log folder not found!")
+        console.log("Data folder not found!")
     }
 }
 
 const del = (id) => {
-    if (fs.existsSync("log")) {
-        const res = fs.readFileSync(`log/log.json`, { encoding: 'utf8', flag: 'r' });
-        if (res) {
-            let parsedData = JSON.parse(res)
-            let returnID = ""
-            if (id === "all" || id === "a") {
-                const { prompt } = require('enquirer');
-                let is_Deleted = false;
-                prompt({
-                    type: 'confirm',
-                    name: 'confirm',
-                    message: 'Do you want to delete all data'
-                }).then(answer => {
-                    if (answer.confirm) {
-                        let arr = new Array();
-                        fs.writeFileSync(`log/log.json`, JSON.stringify(arr))
-                        is_Deleted = true;
-                    }
-                });
-                if (is_Deleted) {
-                    return "All log deleted";
+    if (fs.existsSync(`./${config.dataFolder}`)) {
+        let arr = [];
+        let delID = ""
+        if (jsondata.length > 0) {
+            jsondata.map((i) => {
+                if (i.id === id) {
+                    i.deleted = true;
+                    delID = i.id;
                 }
-                return "Process cancelled"
-            } else {
-                let arr = new Array();
-                parsedData.map((i) => {
-                    if (i.id === id) {
-                        i.deleted = true;
-                        returnID = i.id;
-                    }
-                    arr.push(i)
-                })
-                fs.writeFileSync(`log/log.json`, JSON.stringify(arr))
-                return returnID
-            }
+            })
+            fs.writeFileSync(datalocation, JSON.stringify(jsondata))
+            return delID;
         } else {
             console.log("Data not found")
+        }
+    } else {
+        console.log("Data folder not found!")
+    }
+}
+
+const search = (a) => {
+    if (fs.existsSync(`./${config.dataFolder}`)) {
+        if (jsondata.length > 0) {
+            let arr = new Array();
+            let result = []
+            jsondata.map((i) => {
+                let temparr = i.query;
+                for (let j = 0; j < a.length; j++) {
+                    for (let k = 0; k < temparr.length; k++) {
+                        if (a[j] === i.query[k]) {
+                            if (!(i.deleted)) {
+                                result.push(i)
+                            }
+                        }
+                    }
+                }
+            })
+            let qdata = [...new Set(result)]
+            return qdata
+        } else {
+            return []
         }
     } else {
         console.log("Log folder not found!")
     }
 }
 
-const search = (input, a) => {
-    if (fs.existsSync("log")) {
-        const res = fs.readFileSync(`log/log.json`, { encoding: 'utf8', flag: 'r' });
-        if (res) {
-            let parsedData = JSON.parse(res)
-            let arr = new Array();
-            let result = []
-            parsedData.map((i) => {
-                let temparr = i.query;
-                for (let j = 0; j < a.length; j++) {
-                    for (let k = 0; k < temparr.length; k++) {
-                        if (a[j] === i.query[k]) {
-                            result.push(i)
-                        }
+const update = (id, { log, pass, fav, deleted, query }) => {
+    // console.log(id, log, pass, fav, deleted, query)
+    if (fs.existsSync(`./${config.dataFolder}`)) {
+        let returnarr = []
+        let updatereturnid;
+        if (jsondata.length > 0) {
+            jsondata.map((i) => {
+                if (i.id === id) {
+                    let passlength;
+                    updatereturnid = i.id
+                    try {
+                        passlength = pass.length
+                    } catch (err) {
+                        passlength = 0
+                    }
+                    if (pass === null || passlength) {
+                        i.pass = pass
+                        returnarr.push(`Updated ID:${i.id} Pass ${i.pass} -> ${pass}`)
+                    }
+                    if (deleted === true) {
+                        i.deleted = deleted
+                        returnarr.push(`Updated ID:${i.id} Deleted ${i.deleted} -> ${deleted}`)
+                    }
+                    if (deleted === false) {
+                        i.deleted = deleted
+                        returnarr.push(`Updated ID:${i.id} Deleted ${i.deleted} -> ${deleted}`)
+                    }
+                    if (fav === true) {
+                        i.fav = fav
+                        returnarr.push(`Updated ID:${i.id} Fav ${i.fav} -> ${fav}`)
+                    }
+                    if (fav === false) {
+                        i.fav = fav
+                        returnarr.push(`Updated ID:${i.id} Fav ${i.fav} -> ${fav}`)
+                    }
+                    if (log) {
+                        i.log = log
+                        returnarr.push(`Updated ID:${i.id} log ${i.log} -> ${log}`)
+                    }
+                    if (query) {
+                        i.query = query
+                        returnarr.push(`Updated ID:${i.id} query ${i.query} -> ${query}`)
                     }
                 }
             })
-            return result;
+            returnarr.push(updatereturnid)
+            return returnarr;
         } else {
-            console.log("Data not found")
+            return []
         }
     } else {
-        console.log("Log folder not found!")
+        console.log("Data folder not found!")
+    }
+}
+
+const list = () => {
+    if (fs.existsSync(`./${config.dataFolder}`)) {
+        let arr = []
+        if (jsondata.length > 0) {
+            jsondata.map((i) => {
+                if (!(i.deleted)) {
+                    arr.push(i.id)
+                }
+            })
+            return arr;
+        } else {
+            return []
+        }
+    } else {
+        console.log("Data folder not found!")
     }
 }
 
@@ -123,4 +169,6 @@ module.exports = {
     get,
     del,
     search,
+    update,
+    list,
 }
