@@ -23,6 +23,33 @@ let query = input.split(/(\s+)/).filter(function (e) { return e.trim().length > 
 // console.log(argv[3].length)
 // console.log(input)
 
+function timeSince(date) {
+    date = new Date(Date.now() - date);
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = seconds / 31536000;
+
+    if (interval > 1) {
+        return Math.floor(interval) + " years";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+        return Math.floor(interval) + " months";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+        return Math.floor(interval) + " days";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+        return Math.floor(interval) + " hours";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+        return Math.floor(interval) + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+}
 
 if (argv[2] === "log" || argv[2] === "l") {
     let inputdata = require('prompt-sync')()('[Log] # ')
@@ -32,7 +59,9 @@ if (argv[2] === "log" || argv[2] === "l") {
     if (pass === "n" || pass === "N" || pass === "null" || pass === "" || pass === "Null") {
         pass = null;
     }
-    pass = CryptoJS.AES.encrypt(pass, `${config.crypto_secret_key}`).toString()
+    if (pass !== null) {
+        pass = CryptoJS.AES.encrypt(pass, `${config.crypto_secret_key}`).toString()
+    }
     let d = new Date()
     const day = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
     let data = {
@@ -47,7 +76,8 @@ if (argv[2] === "log" || argv[2] === "l") {
             month: d.getMonth() + 1,
             date: d.getDate(),
             day: day[d.getDay()],
-            now: Date.now(),
+            time: d.toLocaleTimeString(),
+            now: new Date(Date.now()),
         },
         permissions: {
             read: true,
@@ -65,17 +95,16 @@ if (argv[2] === "log" || argv[2] === "l") {
     const res = db.set(data)
     console.log(res)
 } else if (argv[2] === "get" || argv[2] === "g") {
-    try {
-        let data = db.get(input)
+    let data = db.get(input)
+    if (data) {
         data.map((i) => {
             console.log(colors.yellow(`[Log] # ${i.log}`))
             console.log(colors.green(`[ID] # ${i.id}`))
-            console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${i.date.day}]`))
+            console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${timeSince(i.date.now)}] [${i.date.time}] [${i.date.day}]`))
             console.log(colors.red("----------------------------------------------------------"))
         })
-    } catch (error) {
-        if (error) throw error;
-        console.log(colors.red("Data not found"))
+    } else {
+        console.log([])
     }
 } else if (argv[2] === "del" || argv[2] === "d") {
     let data = db.del(argv[3])
@@ -84,12 +113,16 @@ if (argv[2] === "log" || argv[2] === "l") {
     let inputdata = require('prompt-sync')()('[keyWords] # ')
     let query = inputdata.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
     let data = db.search(query)
-    data.map((i) => {
-        console.log(colors.yellow(`[Log] # ${i.log}`))
-        console.log(colors.green(`[ID] # ${i.id}`))
-        console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${i.date.day}]`))
-        console.log(colors.red("----------------------------------------------------------"))
-    })
+    if (data) {
+        data.map((i) => {
+            console.log(colors.yellow(`[Log] # ${i.log}`))
+            console.log(colors.green(`[ID] # ${i.id}`))
+            console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${timeSince(i.date.now)}] [${i.date.time}] [${i.date.day}]`))
+            console.log(colors.red("----------------------------------------------------------"))
+        })
+    } else {
+        console.log([])
+    }
 } else if (argv[2] === "list") {
     let data = db.list()
     console.log(data)

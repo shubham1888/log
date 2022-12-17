@@ -73,7 +73,7 @@ const search = (a) => {
                 let temparr = i.query;
                 for (let j = 0; j < a.length; j++) {
                     for (let k = 0; k < temparr.length; k++) {
-                        if (a[j] === i.query[k]) {
+                        if ((a[j] === i.query[k]) || (a[j] === i.query[k].substring(0, a[j].length)) || (a[j] === (i.query[k].substring(i.query[k].indexOf(a[j]), i.query[k].length)))) {
                             if (!(i.deleted)) {
                                 result.push(i)
                             }
