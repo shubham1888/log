@@ -1,0 +1,28 @@
+{
+  "name": "log",
+  "version": "1.0.0",
+  "description": "A simple log saving utility by shubham shah",
+  "main": "index.js",
+  "preferGlobal": true,
+  "bin": "./index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "log": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [
+    "log",
+    "shubham",
+    "shah",
+    "zinc",
+    "fs",
+    "db"
+  ],
+  "author": "shubham shah",
+  "license": "ISC",
+  "dependencies": {
+    "ansi-colors": "^4.1.3",
+    "crypto-js": "^4.1.1",
+    "prompt-sync": "^4.2.0"
+  }
+}

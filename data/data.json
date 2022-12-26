@@ -1,0 +1,138 @@
+[
+    {
+        "id": "lc3a9wpc",
+        "log": "first data logappended logsome more appended text log",
+        "pass": null,
+        "fav": false,
+        "deleted": false,
+        "query": [
+            "first",
+            "data",
+            "log",
+            [
+                "appended",
+                "log"
+            ],
+            "some",
+            "more",
+            "appended",
+            "text",
+            "log"
+        ],
+        "date": {
+            "year": 2022,
+            "month": 12,
+            "date": 25,
+            "day": "sunday",
+            "time": "5:09:51 PM",
+            "now": 1671967491027
+        },
+        "permissions": {
+            "read": true,
+            "update": true,
+            "del": true,
+            "mkfav": true,
+            "setpass": true
+        },
+        "info": {
+            "platform": "linux",
+            "hostname": "kali",
+            "totalmem": 3801587712
+        }
+    },
+    {
+        "id": "lc3acywg",
+        "log": "second log",
+        "pass": null,
+        "fav": false,
+        "deleted": false,
+        "query": [
+            "second",
+            "log"
+        ],
+        "date": {
+            "year": 2022,
+            "month": 12,
+            "date": 25,
+            "day": "sunday",
+            "time": "5:12:13 PM",
+            "now": 1671967633855
+        },
+        "permissions": {
+            "read": true,
+            "update": true,
+            "del": true,
+            "mkfav": true,
+            "setpass": true
+        },
+        "info": {
+            "platform": "linux",
+            "hostname": "kali",
+            "totalmem": 3801587712
+        }
+    },
+    {
+        "id": "lc4pg75k",
+        "log": "jadflksfjdlsf",
+        "useuname": null,
+        "pass": null,
+        "fav": false,
+        "deleted": false,
+        "query": [],
+        "lastupdated": null,
+        "date": {
+            "year": 2022,
+            "month": 12,
+            "date": 26,
+            "day": "monday",
+            "hour": 17,
+            "minutes": -345,
+            "time": "5:02:24 PM",
+            "now": 1672053445249
+        },
+        "permissions": {
+            "read": true,
+            "update": true,
+            "del": true,
+            "mkfav": true,
+            "setpass": true
+        },
+        "info": {
+            "platform": "linux",
+            "hostname": "kali",
+            "totalmem": 3801595904
+        }
+    },
+    {
+        "id": "lc4pgje4",
+        "log": "test1",
+        "useuname": null,
+        "pass": "U2FsdGVkX18ckrFLBAwSlWXz479dKwjqIkdzpbKGVXo=",
+        "fav": false,
+        "deleted": false,
+        "query": [],
+        "lastupdated": null,
+        "date": {
+            "year": 2022,
+            "month": 12,
+            "date": 26,
+            "day": "monday",
+            "hour": 17,
+            "minutes": -345,
+            "time": "5:02:40 PM",
+            "now": 1672053460820
+        },
+        "permissions": {
+            "read": true,
+            "update": true,
+            "del": true,
+            "mkfav": true,
+            "setpass": true
+        },
+        "info": {
+            "platform": "linux",
+            "hostname": "kali",
+            "totalmem": 3801595904
+        }
+    }
+]
