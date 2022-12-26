@@ -88,7 +88,7 @@ if (argv[2] === "log" || argv[2] === "l") {
         pass: pass,
         fav: false,
         deleted: false,
-        query: [],
+        query,
         lastupdated: null,
         date: {
             year: d.getFullYear(),
@@ -101,6 +101,8 @@ if (argv[2] === "log" || argv[2] === "l") {
             time: d.toLocaleTimeString(),
             now: Date.now(),
         },
+        ldate: d.toString(),
+        utc: d.toUTCString(),
         permissions: {
             read: true,
             update: true,
