@@ -2,6 +2,7 @@
 const fs = require("node:fs")
 const config = require("./config")
 
+
 let jsondata = []
 let datalocation = ``
 try {

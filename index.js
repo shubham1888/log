@@ -230,3 +230,4 @@ if (argv[2] === "log" || argv[2] === "l") {
 else {
     console.log("Bad command!")
 }
+
