@@ -1,31 +1,23 @@
 [
     {
-        "id": "lc3a9wpc",
-        "log": "first data logappended logsome more appended text log",
+        "id": "lc3e89t1",
+        "data": "first post ",
         "pass": null,
         "fav": false,
         "deleted": false,
         "query": [
             "first",
-            "data",
-            "log",
-            [
-                "appended",
-                "log"
-            ],
-            "some",
-            "more",
-            "appended",
-            "text",
-            "log"
+            "post"
         ],
+        "category": null,
+        "origin": "https://computermaster.vercel.app/",
         "date": {
             "year": 2022,
             "month": 12,
             "date": 25,
             "day": "sunday",
-            "time": "5:09:51 PM",
-            "now": 1671967491027
+            "time": "7:00:33 PM",
+            "now": 1671974133157
         },
         "permissions": {
             "read": true,
@@ -33,180 +25,6 @@
             "del": true,
             "mkfav": true,
             "setpass": true
-        },
-        "info": {
-            "platform": "linux",
-            "hostname": "kali",
-            "totalmem": 3801587712
-        }
-    },
-    {
-        "id": "lc3acywg",
-        "log": "second log",
-        "pass": null,
-        "fav": false,
-        "deleted": false,
-        "query": [
-            "second",
-            "log"
-        ],
-        "date": {
-            "year": 2022,
-            "month": 12,
-            "date": 25,
-            "day": "sunday",
-            "time": "5:12:13 PM",
-            "now": 1671967633855
-        },
-        "permissions": {
-            "read": true,
-            "update": true,
-            "del": true,
-            "mkfav": true,
-            "setpass": true
-        },
-        "info": {
-            "platform": "linux",
-            "hostname": "kali",
-            "totalmem": 3801587712
-        }
-    },
-    {
-        "id": "lc4pg75k",
-        "log": "jadflksfjdlsf",
-        "useuname": null,
-        "pass": null,
-        "fav": false,
-        "deleted": false,
-        "query": [],
-        "lastupdated": null,
-        "date": {
-            "year": 2022,
-            "month": 12,
-            "date": 26,
-            "day": "monday",
-            "hour": 17,
-            "minutes": -345,
-            "time": "5:02:24 PM",
-            "now": 1672053445249
-        },
-        "permissions": {
-            "read": true,
-            "update": true,
-            "del": true,
-            "mkfav": true,
-            "setpass": true
-        },
-        "info": {
-            "platform": "linux",
-            "hostname": "kali",
-            "totalmem": 3801595904
-        }
-    },
-    {
-        "id": "lc4pgje4",
-        "log": "test1",
-        "useuname": null,
-        "pass": "U2FsdGVkX18ckrFLBAwSlWXz479dKwjqIkdzpbKGVXo=",
-        "fav": false,
-        "deleted": false,
-        "query": [],
-        "lastupdated": null,
-        "date": {
-            "year": 2022,
-            "month": 12,
-            "date": 26,
-            "day": "monday",
-            "hour": 17,
-            "minutes": -345,
-            "time": "5:02:40 PM",
-            "now": 1672053460820
-        },
-        "permissions": {
-            "read": true,
-            "update": true,
-            "del": true,
-            "mkfav": true,
-            "setpass": true
-        },
-        "info": {
-            "platform": "linux",
-            "hostname": "kali",
-            "totalmem": 3801595904
-        }
-    },
-    {
-        "id": "lc4snnf4",
-        "log": "test 95",
-        "useuname": null,
-        "pass": null,
-        "fav": false,
-        "deleted": false,
-        "query": [],
-        "lastupdated": null,
-        "date": {
-            "year": 2022,
-            "month": 12,
-            "date": 26,
-            "day": "monday",
-            "hour": 18,
-            "minutes": 32,
-            "seconds": 11,
-            "time": "6:32:11 PM",
-            "now": 1672058831499
-        },
-        "ldate": "Mon Dec 26 2022 18:32:11 GMT+0545 (Nepal Time)",
-        "utc": "Mon, 26 Dec 2022 12:47:11 GMT",
-        "permissions": {
-            "read": true,
-            "update": true,
-            "del": true,
-            "mkfav": true,
-            "setpass": true
-        },
-        "info": {
-            "platform": "linux",
-            "hostname": "kali",
-            "totalmem": 3801595904
-        }
-    },
-    {
-        "id": "lc4soxik",
-        "log": "test 100 %",
-        "useuname": null,
-        "pass": "U2FsdGVkX1+lPL0nYdkz7qmJ+RMSXOG8NZsaaLq3BMw=",
-        "fav": false,
-        "deleted": false,
-        "query": [
-            "test",
-            "100",
-            "%"
-        ],
-        "lastupdated": null,
-        "date": {
-            "year": 2022,
-            "month": 12,
-            "date": 26,
-            "day": "monday",
-            "hour": 18,
-            "minutes": 33,
-            "seconds": 11,
-            "time": "6:33:11 PM",
-            "now": 1672058891241
-        },
-        "ldate": "Mon Dec 26 2022 18:33:11 GMT+0545 (Nepal Time)",
-        "utc": "Mon, 26 Dec 2022 12:48:11 GMT",
-        "permissions": {
-            "read": true,
-            "update": true,
-            "del": true,
-            "mkfav": true,
-            "setpass": true
-        },
-        "info": {
-            "platform": "linux",
-            "hostname": "kali",
-            "totalmem": 3801595904
         }
     }
 ]

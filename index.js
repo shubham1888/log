@@ -4,6 +4,7 @@ const os = require("node:os")
 const fs = require("node:fs")
 const colors = require('ansi-colors');
 const CryptoJS = require("crypto-js");
+const axios = require('axios')
 const config = require("./config");
 // console.clear()
 
@@ -152,9 +153,9 @@ if (argv[2] === "log" || argv[2] === "l") {
     if (data) {
         data.map((i) => {
             if (!i.deleted) {
-                console.log(colors.yellow(`[Log] # ${i.log}`))
                 console.log(colors.green(`[ID] # ${i.id}`))
                 console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${timeSince(new Date(Date.now() - i.date.now))}] [${i.date.time}] [${i.date.day}]`))
+                console.log(colors.yellow(`[Log] # ${i.data}`))
                 console.log(colors.red("----------------------------------------------------------"))
             }
         })
@@ -171,9 +172,9 @@ if (argv[2] === "log" || argv[2] === "l") {
     if (data) {
         data.map((i) => {
             if (!i.deleted) {
-                console.log(colors.yellow(`[Log] # ${i.log}`))
                 console.log(colors.green(`[ID] # ${i.id}`))
                 console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${timeSince(new Date(Date.now() - i.date.now))}] [${i.date.time}] [${i.date.day}]`))
+                console.log(colors.yellow(`[Log] # ${i.data}`))
                 console.log(colors.red("----------------------------------------------------------"))
             }
         })
@@ -212,22 +213,42 @@ if (argv[2] === "log" || argv[2] === "l") {
         console.log(colors.red('Export failed'))
     }
 } else if (argv[2] === "i" || argv[2] === "import") {
-    let ml = require('prompt-sync')()('[Import all logs] # (y/n) ')
-    if ((ml.toUpperCase() == "Y") || (ml.toUpperCase() == "YES")) {
-        let res = db.importlogs()
-        console.log(res)
-    } else {
-        console.log(colors.red('Import failed'))
+    let url = require('prompt-sync')()(`[URL] (${config.default.import_url}) # `)
+    if (url === "") {
+        url = config.default.import_url
     }
+    // let res = db.importlogs(url)
+    db.importlogs(url).then((data) => {
+        if (typeof (res) === 'string') {
+            fs.writeFileSync(config.import_file_name, data.data)
+            // fs.writeFileSync(config.import_info_file_name, data)
+        } else {
+            fs.writeFileSync(config.import_file_name, JSON.stringify(data.data))
+            // fs.writeFileSync(config.import_info_file_name, data)
+        }
+        console.log({ msg: 'Imported successfully file - import.json' })
+    });
 } else if (argv[2] === "get") {
-    let url = require('prompt-sync')()('[URL] # ')
-    let data = db.getreq(url)
-    console.log(data)
+    const getres = async () => {
+        let url = require('prompt-sync')()('[URL] # ')
+        // let data = await db.getreq(url)
+        let data = await axios.get(url)
+        // let json = data.json()
+        console.log(data.data)
+    }
+    getres()
 } else if (argv[2] === "post") {
-    let url = require('prompt-sync')()('[URL] # ')
-    let data = require('prompt-sync')()('[Data] # ')
-    let res = db.postreq(url, data)
-    console.log(res)
+    const postdata = async () => {
+        let url = require('prompt-sync')()('[URL] # ')
+        let data = require('prompt-sync')()('[Data] # ')
+        if (typeof (data) === "string") {
+            data = JSON.parse(data)
+        }
+        let res = await axios.post(url, data)
+        // let res = db.postreq(url, data)
+        console.log(res.data)
+    }
+    postdata()
 }
 else {
     console.log("Bad command!")

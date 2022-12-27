@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs = require("node:fs")
 const config = require("./config")
-
+const axios = require("axios")
 
 let jsondata = []
 let datalocation = ``
@@ -147,7 +147,7 @@ const search = (a) => {
                 let temparr = i.query;
                 for (let j = 0; j < a.length; j++) {
                     for (let k = 0; k < temparr.length; k++) {
-                        if (((a[j]).toUpperCase() === (i.query[k]).toUpperCase()) || ((a[j].toUpperCase()) === (((i.query[k]).substring(0, a[j].length)).toUpperCase())) || (((a[j]).toUpperCase()) === (((i.query[k]).substring((i.query[k]).indexOf(a[j]), (i.query[k]).length))))) {
+                        if ((a[j] === i.query[k]) || (a[j] === i.query[k].substring(0, a[j].length)) || (a[j] === (i.query[k].substring(i.query[k].indexOf(a[j]), i.query[k].length)))) {
                             if (!(i.deleted)) {
                                 result.push(i)
                             }
@@ -283,32 +283,21 @@ const exportlogs = async () => {
         console.log("Data folder not found!")
     }
 }
-const importlogs = async () => {
-    if (fs.existsSync(`./${config.dataFolder}`)) {
-        let res = await fetch("https://server.shubham1888.repl.co/getlogs")
-        let data = await res.json();
-        if (typeof (data) === 'string') {
-            fs.writeFileSync(datalocation, data)
-        } else {
-            fs.writeFileSync(datalocation, JSON.stringify(data))
-        }
-        return { msg: data }
-    } else {
-        console.log("Data folder not found!")
+const importlogs = (url) => {
+    try {
+        return axios.get(url).then((response) => response);
+    } catch (e) {
+        console.error(e)
     }
 }
-const getreq = async (url) => {
-    let res = await fetch(url)
-    let data = await res.json();
-    return data;
+const getreq = (url) => {
+    return axios.get(url).then((response) => response);
 }
-const postreq = async (url, data) => {
-    let req = await fetch(url, {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    })
-    return req
+const postreq = (url, data) => {
+    if (typeof (data) === "object") {
+        data = JSON.stringify(data)
+    }
+    return axios.post(url, data).then((response) => response);
 }
 
 module.exports = {

@@ -8,5 +8,10 @@ module.exports = {
         username: null,
         password: null,
         email: null,
+    },
+    import_file_name:"import.json",
+    import_info_file_name:"import.json",
+    default:{
+        import_url:"https://server.shubham1888.repl.co/getpost"
     }
 }
