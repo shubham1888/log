@@ -38,3 +38,4 @@ console.log(typeof "2022-02-19")
 console.log(new Date().toUTCString())
 console.log(new Date().toString())
 console.log(new Date().toLocaleString())
+// testing .gitignore
