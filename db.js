@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const fs = require("node:fs")
 const config = require("./config")
+const axios = require("axios")
 
 let jsondata = []
 let datalocation = ``
@@ -14,6 +15,10 @@ try {
     // console.log(jsondata.length)
     // console.log(jsondata)
     console.log("Data not found!");
+}
+
+const initialise = () => {
+    return config.userinfo;
 }
 
 const set = (data) => {
@@ -31,10 +36,79 @@ const set = (data) => {
     }
 }
 
-const get = () => {
+const get = (obj) => {
+    // console.log(obj)
+    // console.log(obj.length)
     if (fs.existsSync(`./${config.dataFolder}`)) {
         if (jsondata.length > 0) {
-            return jsondata;
+            if ((obj.else === "")) {
+                return jsondata;
+            } else {
+                let returnval = []
+                if (obj.id) {
+                    jsondata.map((i) => {
+                        if (i.id === obj.id) {
+                            // console.log(i)
+                            returnval.push(i)
+                        }
+                    })
+                }
+                if (obj.day) {
+                    jsondata.map((i) => {
+                        if (i.date.day === obj.day) {
+                            // console.log(i)
+                            returnval.push(i)
+                        }
+                    })
+                }
+                if (obj.year) {
+                    jsondata.map((i) => {
+                        if (i.date.year == obj.year) {
+                            // console.log(i)
+                            returnval.push(i)
+                        }
+                    })
+                }
+                if (obj.date) {
+                    jsondata.map((i) => {
+                        if (i.date.date == obj.date) {
+                            // console.log(i)
+                            returnval.push(i)
+                        }
+                    })
+                }
+                if (obj.month) {
+                    jsondata.map((i) => {
+                        if (i.date.month == obj.month) {
+                            // console.log(i)
+                            returnval.push(i)
+                        }
+                    })
+                }
+                if (obj.time) {
+                    jsondata.map((i) => {
+                        if (obj.time.length > 2) {
+                            if ((i.date.time === obj.time)) {
+                                // console.log(i)
+                                returnval.push(i)
+                            }
+                        } else if (obj.time.length === 1) {
+                            if ((i.date.time.substring(0, 2) === obj.time + ":")) {
+                                // console.log(i)
+                                returnval.push(i)
+                            }
+                        } else if (obj.time.length === 2) {
+                            if ((i.date.time.substring(0, 2) === obj.time)) {
+                                // console.log(i)
+                                returnval.push(i)
+                            }
+                        } else {
+
+                        }
+                    })
+                }
+                return returnval;
+            }
         } else {
             console.log("Data not found")
         }
@@ -164,6 +238,68 @@ const list = () => {
     }
 }
 
+const append = ({ appendid, appendlogval, query }) => {
+    if (fs.existsSync(`./${config.dataFolder}`)) {
+        let id = ''
+        if (jsondata.length > 0) {
+            jsondata.map((i) => {
+                if (i.id == appendid) {
+                    i.log += appendlogval
+                    query.map((j) => {
+                        i.query.push(j)
+                    })
+                    id = i.id
+                    fs.writeFileSync(datalocation, JSON.stringify(jsondata))
+                }
+            })
+            return id;
+        } else {
+            return []
+        }
+    } else {
+        console.log("Data folder not found!")
+    }
+}
+
+const exportlogs = async () => {
+    if (fs.existsSync(`./${config.dataFolder}`)) {
+        if (jsondata.length > 0) {
+            let res;
+            res = jsondata.map(async (i) => {
+                await fetch("https://server.shubham1888.repl.co/setlogs", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(jsondata)
+                })
+                // .then(res => {
+                //     return { res: res }
+                // });
+            })
+            return { msg: 'Logs migrated successfully' }
+        } else {
+            return []
+        }
+    } else {
+        console.log("Data folder not found!")
+    }
+}
+const importlogs = (url) => {
+    try {
+        return axios.get(url).then((response) => response);
+    } catch (e) {
+        console.error(e)
+    }
+}
+const getreq = (url) => {
+    return axios.get(url).then((response) => response);
+}
+const postreq = (url, data) => {
+    if (typeof (data) === "object") {
+        data = JSON.stringify(data)
+    }
+    return axios.post(url, data).then((response) => response);
+}
+
 module.exports = {
     set,
     get,
@@ -171,4 +307,10 @@ module.exports = {
     search,
     update,
     list,
+    initialise,
+    append,
+    exportlogs,
+    importlogs,
+    getreq,
+    postreq,
 }

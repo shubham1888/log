@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 const db = require("./db");
 const os = require("node:os")
+const fs = require("node:fs")
 const colors = require('ansi-colors');
 const CryptoJS = require("crypto-js");
+const axios = require('axios')
 const config = require("./config");
 // console.clear()
 
@@ -22,6 +24,22 @@ let query = input.split(/(\s+)/).filter(function (e) { return e.trim().length > 
 // console.log(argv[3])
 // console.log(argv[3].length)
 // console.log(input)
+
+// const check = () => {
+//     let data = db.initialise()
+//     console.log(data)
+//     // let inputdata = {}
+//     let inputdata = []
+//     if (data.username === null) {
+//         inputdata.username = require('prompt-sync')()('[Username] # ')
+//     }
+//     if (data.password === null) {
+//         inputdata.password = require('prompt-sync')()('[Password] # ')
+//     }
+//     fs.writeFileSync("./config.js", )
+//     // process.exit(1)
+// }
+// check()
 
 function timeSince(date) {
     date = new Date(Date.now() - date);
@@ -67,18 +85,25 @@ if (argv[2] === "log" || argv[2] === "l") {
     let data = {
         id: Date.now().toString(36),
         log: inputdata,
+        useuname: config.userinfo.username,
         pass: pass,
         fav: false,
         deleted: false,
         query,
+        lastupdated: null,
         date: {
             year: d.getFullYear(),
             month: d.getMonth() + 1,
             date: d.getDate(),
             day: day[d.getDay()],
+            hour: d.getHours(),
+            minutes: d.getMinutes(),
+            seconds: d.getSeconds(),
             time: d.toLocaleTimeString(),
-            now: new Date(Date.now()),
+            now: Date.now(),
         },
+        ldate: d.toString(),
+        utc: d.toUTCString(),
         permissions: {
             read: true,
             update: true,
@@ -94,14 +119,45 @@ if (argv[2] === "log" || argv[2] === "l") {
     }
     const res = db.set(data)
     console.log(res)
-} else if (argv[2] === "get" || argv[2] === "g") {
-    let data = db.get(input)
+} else if (argv[2] === "g") {
+    console.log(colors.red("Find values [id] [year] [month] [date] [day] [time] "))
+    let findvalue = require('prompt-sync')()(colors.green('[Find value] # '))
+    let inputdata = ""
+    if (!(findvalue === '')) {
+        inputdata = require('prompt-sync')()(colors.green('[Data] # '))
+    }
+    let obj = {}
+    if (findvalue === "") {
+        obj.else = ""
+    }
+    if (findvalue === "id") {
+        obj.id = inputdata
+    }
+    if (findvalue === "date") {
+        obj.date = inputdata
+    }
+    if (findvalue === "day") {
+        obj.day = inputdata
+    }
+    if (findvalue === "year") {
+        obj.year = inputdata
+    }
+    if (findvalue === "month") {
+        obj.month = inputdata
+    }
+    if (findvalue === "time") {
+        obj.time = inputdata
+    }
+    let data = db.get(obj)
+    // console.log(data)
     if (data) {
         data.map((i) => {
-            console.log(colors.yellow(`[Log] # ${i.log}`))
-            console.log(colors.green(`[ID] # ${i.id}`))
-            console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${timeSince(i.date.now)}] [${i.date.time}] [${i.date.day}]`))
-            console.log(colors.red("----------------------------------------------------------"))
+            if (!i.deleted) {
+                console.log(colors.green(`[ID] # ${i.id}`))
+                console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${timeSince(new Date(Date.now() - i.date.now))}] [${i.date.time}] [${i.date.day}]`))
+                console.log(colors.yellow(`[Log] # ${i.data}`))
+                console.log(colors.red("----------------------------------------------------------"))
+            }
         })
     } else {
         console.log([])
@@ -115,10 +171,12 @@ if (argv[2] === "log" || argv[2] === "l") {
     let data = db.search(query)
     if (data) {
         data.map((i) => {
-            console.log(colors.yellow(`[Log] # ${i.log}`))
-            console.log(colors.green(`[ID] # ${i.id}`))
-            console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${timeSince(i.date.now)}] [${i.date.time}] [${i.date.day}]`))
-            console.log(colors.red("----------------------------------------------------------"))
+            if (!i.deleted) {
+                console.log(colors.green(`[ID] # ${i.id}`))
+                console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${timeSince(new Date(Date.now() - i.date.now))}] [${i.date.time}] [${i.date.day}]`))
+                console.log(colors.yellow(`[Log] # ${i.data}`))
+                console.log(colors.red("----------------------------------------------------------"))
+            }
         })
     } else {
         console.log([])
@@ -127,8 +185,10 @@ if (argv[2] === "log" || argv[2] === "l") {
     let data = db.list()
     console.log(data)
 } else if (argv[2] === "u" || argv[2] === "update") {
-    let updateid = "lbqbple0"
-    let updatevalues = {
+    console.log(colors.red("[ID] [LOG] [Pass] [FAV] [DELETE] "))
+    let updateid = require('prompt-sync')()('[ID] # ')
+    let updatevalues = require('prompt-sync')()('[UPDATE values] # ')
+    let updatevalue = {
         log: "updated second log",
         // pass,
         // fav, 
@@ -136,9 +196,61 @@ if (argv[2] === "log" || argv[2] === "l") {
     }
     let query = updatevalues.log.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
     updatevalues.query = query;
-    let data = db.update(updateid, updatevalues)
+    // let data = db.update(updateid, updatevalues)
+    // console.log(data)
+} else if (argv[2] === "a" || argv[2] === "append") {
+    let appendid = require('prompt-sync')()('[ID] # ')
+    let appendlogval = require('prompt-sync')()('[Log] # ')
+    let query = appendlogval.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
+    let data = db.append({ appendid, appendlogval, query })
     console.log(data)
+} else if (argv[2] === "e" || argv[2] === "export") {
+    let ml = require('prompt-sync')()('[Export all logs] # (y/n) ')
+    if ((ml.toUpperCase() == "Y") || (ml.toUpperCase() == "YES")) {
+        let res = db.exportlogs()
+        console.log(res)
+    } else {
+        console.log(colors.red('Export failed'))
+    }
+} else if (argv[2] === "i" || argv[2] === "import") {
+    let url = require('prompt-sync')()(`[URL] (${config.default.import_url}) # `)
+    if (url === "") {
+        url = config.default.import_url
+    }
+    // let res = db.importlogs(url)
+    db.importlogs(url).then((data) => {
+        if (typeof (res) === 'string') {
+            fs.writeFileSync(config.import_file_name, data.data)
+            // fs.writeFileSync(config.import_info_file_name, data)
+        } else {
+            fs.writeFileSync(config.import_file_name, JSON.stringify(data.data))
+            // fs.writeFileSync(config.import_info_file_name, data)
+        }
+        console.log({ msg: 'Imported successfully file - import.json' })
+    });
+} else if (argv[2] === "get") {
+    const getres = async () => {
+        let url = require('prompt-sync')()('[URL] # ')
+        // let data = await db.getreq(url)
+        let data = await axios.get(url)
+        // let json = data.json()
+        console.log(data.data)
+    }
+    getres()
+} else if (argv[2] === "post") {
+    const postdata = async () => {
+        let url = require('prompt-sync')()('[URL] # ')
+        let data = require('prompt-sync')()('[Data] # ')
+        if (typeof (data) === "string") {
+            data = JSON.parse(data)
+        }
+        let res = await axios.post(url, data)
+        // let res = db.postreq(url, data)
+        console.log(res.data)
+    }
+    postdata()
 }
 else {
     console.log("Bad command!")
 }
+
