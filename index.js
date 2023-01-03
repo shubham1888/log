@@ -5,7 +5,7 @@ const fs = require("node:fs")
 const colors = require('ansi-colors');
 const CryptoJS = require("crypto-js");
 const axios = require('axios')
-const config = require("./config");
+const config = require("./config.json");
 // console.clear()
 
 // const argv = process.argv.slice(2);
@@ -25,21 +25,63 @@ let query = input.split(/(\s+)/).filter(function (e) { return e.trim().length > 
 // console.log(argv[3].length)
 // console.log(input)
 
-// const check = () => {
-//     let data = db.initialise()
-//     console.log(data)
-//     // let inputdata = {}
-//     let inputdata = []
-//     if (data.username === null) {
-//         inputdata.username = require('prompt-sync')()('[Username] # ')
-//     }
-//     if (data.password === null) {
-//         inputdata.password = require('prompt-sync')()('[Password] # ')
-//     }
-//     fs.writeFileSync("./config.js", )
-//     // process.exit(1)
-// }
-// check()
+let loginfailedtimes = 0
+
+const init = () => {
+    let obj = config[0].userinfo;
+    if (config[0].userinfo.username === null) {
+        obj.username = require('prompt-sync')()('Username : ')
+        if (obj.username === '') {
+            obj.username = null
+        }
+    }
+    if (config[0].userinfo.password === null) {
+        obj.password = require('prompt-sync')().hide('Password : ')
+        if (obj.password === '') {
+            obj.password = null
+        } else {
+            obj.password = CryptoJS.AES.encrypt(obj.password, config[0].secrets.CRYPTO_SECRET_KEY).toString();
+        }
+    }
+    // if (config[0].userinfo.email === null) {
+    //     obj.email = require('prompt-sync')()('Email : ')
+    //     if (obj.email === '') {
+    //         obj.email = null
+    //     }
+    // }
+    if (config[0].fileinfo.database_path === null) {
+        config[0].fileinfo.database_path = __dirname
+    }
+    config[0].userinfo = obj;
+    config[0].info = {
+        platform: os.platform(),
+        hostname: os.hostname(),
+        totalmem: os.totalmem(),
+    }
+    config[0].permissions = {
+        read: true,
+        update: true,
+        del: true,
+        mkfav: true,
+        setpass: true
+    }
+    fs.writeFileSync("./config.json", JSON.stringify(config))
+    globalpass = require('prompt-sync')().hide('Password : ')
+    var bytes = CryptoJS.AES.decrypt(config[0].userinfo.password, `${config[0].secrets.CRYPTO_SECRET_KEY}`);
+    var originalPass = bytes.toString(CryptoJS.enc.Utf8);
+    if (globalpass === originalPass) {
+        console.log(`Login as ${config[0].userinfo.username}`)
+    } else {
+        console.log(`Login failed`)
+        loginfailedtimes++;
+        if (loginfailedtimes < 3) {
+            console.log("Try again")
+            init()
+        }
+        process.exit(1)
+    }
+}
+init()
 
 function timeSince(date) {
     date = new Date(Date.now() - date);
@@ -85,8 +127,8 @@ if (argv[2] === "log" || argv[2] === "l") {
     let data = {
         id: Date.now().toString(36),
         log: inputdata,
-        useuname: config.userinfo.username,
-        pass: pass,
+        useuname: config[0].userinfo.username,
+        pass: config[0].userinfo.password,
         fav: false,
         deleted: false,
         query,
@@ -103,19 +145,7 @@ if (argv[2] === "log" || argv[2] === "l") {
             now: Date.now(),
         },
         ldate: d.toString(),
-        utc: d.toUTCString(),
-        permissions: {
-            read: true,
-            update: true,
-            del: true,
-            mkfav: true,
-            setpass: true
-        },
-        info: {
-            platform: os.platform(),
-            hostname: os.hostname(),
-            totalmem: os.totalmem(),
-        },
+        utc: d.toUTCString()
     }
     const res = db.set(data)
     console.log(res)
