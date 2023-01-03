@@ -22,16 +22,8 @@ for (let i = 3; i < argv.length; i++) {
 }
 input = input.substring(0, input.length - 1)
 let query = input.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
-// console.log(query)
-// console.log(query.length)
-// console.log(input.length)
-// // console.log(argv)
-// console.log(argv[3])
-// console.log(argv[3].length)
-// console.log(input)
 
 let loginfailedtimes = 0
-
 const init = () => {
     let obj = config.userinfo;
     if (config.userinfo.username === null) {
@@ -86,7 +78,7 @@ const init = () => {
         process.exit(1)
     }
 }
-init()
+// init()
 
 function timeSince(date) {
     date = new Date(Date.now() - date);
@@ -151,6 +143,7 @@ if (argv[2] === "l") {
         now: Date.now(),
         ldate: d.toString(),
         utc: d.toUTCString(),
+        updates: []
     }
     const res = db.set(data)
     console.log(res)
@@ -189,28 +182,30 @@ if (argv[2] === "l") {
         data.map((i) => {
             if (!i.deleted) {
                 console.log(colors.green(`[ID] # ${i.id}`))
-                console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${timeSince(new Date(Date.now() - i.date.now))}] [${i.date.time}] [${i.date.day}]`))
-                console.log(colors.yellow(`[Log] # ${i.data}`))
-                console.log(colors.red("----------------------------------------------------------"))
+                console.log(colors.green(`[Title] # ${i.title}`))
+                console.log(colors.yellow(`[Body] # ${i.body}`))
+                console.log(colors.cyan(`[Date] # ${i.ldate} [${timeSince(new Date(Date.now() - i.date.now))}]`))
+                console.log(colors.red("--------------------------------------------------------"))
             }
         })
     } else {
         console.log([])
     }
-} else if (argv[2] === "del" || argv[2] === "d") {
+} else if (argv[2] === "d") {
     let data = db.del(argv[3])
     console.log(data)
 } else if (argv[2] === "search" || argv[2] === "s") {
-    let inputdata = require('prompt-sync')()('[keyWords] # ')
+    let inputdata = require('prompt-sync')()('Search : ')
     let query = inputdata.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
     let data = db.search(query)
     if (data) {
         data.map((i) => {
             if (!i.deleted) {
                 console.log(colors.green(`[ID] # ${i.id}`))
-                console.log(colors.cyan(`[Date] # ${i.date.year}-${i.date.month}-${i.date.date} [${timeSince(new Date(Date.now() - i.date.now))}] [${i.date.time}] [${i.date.day}]`))
-                console.log(colors.yellow(`[Log] # ${i.data}`))
-                console.log(colors.red("----------------------------------------------------------"))
+                console.log(colors.green(`[Title] # ${i.title}`))
+                console.log(colors.yellow(`[Body] # ${i.body}`))
+                console.log(colors.cyan(`[Date] # ${i.ldate} [${timeSince(new Date(Date.now() - i.date.now))}]`))
+                console.log(colors.red("--------------------------------------------------------"))
             }
         })
     } else {

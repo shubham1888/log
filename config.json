@@ -1,1 +1,35 @@
-{"userinfo":{"username":"shubham shah","password":"U2FsdGVkX18jIuczSxB4n6QxCA0lgvzTl1GoKZNMp/4=","email":null},"fileinfo":{"database_folder":"database","database_file_extension":"json","import_file_name":"import.json","import_info_file_name":"import.json","database_path":"/home/shubham/programs/log"},"url":{"import_url":"https://server.shubham1888.repl.co/getpost"},"secrets":{"CRYPTO_SECRET_KEY":"mycryptopass","CRYPTO_SECRET_KEY_VER":"v1"},"logs":[],"info":{"platform":"linux","hostname":"kali","totalmem":3801595904},"permissions":{"read":true,"update":true,"del":true,"mkfav":true,"setpass":true}}
+{
+    "userinfo": {
+        "username": "shubham shah",
+        "password": "U2FsdGVkX18jIuczSxB4n6QxCA0lgvzTl1GoKZNMp/4=",
+        "email": null
+    },
+    "fileinfo": {
+        "database_file": "data",
+        "database_folder": "database",
+        "database_file_extension": "json",
+        "import_file_name": "import.json",
+        "import_info_file_name": "import.json",
+        "database_path": "/home/shubham/programs/log"
+    },
+    "url": {
+        "import_url": "https://server.shubham1888.repl.co/getpost"
+    },
+    "secrets": {
+        "CRYPTO_SECRET_KEY": "mycryptopass",
+        "CRYPTO_SECRET_KEY_VER": "v1"
+    },
+    "logs": [],
+    "info": {
+        "platform": "linux",
+        "hostname": "kali",
+        "totalmem": 3801595904
+    },
+    "permissions": {
+        "read": true,
+        "update": true,
+        "del": true,
+        "mkfav": true,
+        "setpass": true
+    }
+}

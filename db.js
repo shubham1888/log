@@ -4,33 +4,33 @@ const config = require("./config.json")
 const axios = require("axios")
 
 let jsondata = []
-
+let datalocation = `./${config.fileinfo.database_folder}/${config.fileinfo.database_file}.${config.fileinfo.database_file_extension}`
 const check = () => {
     if (fs.existsSync(`./${config.fileinfo.database_folder}`)) {
         try {
-            const directoryPath = `./${config.fileinfo.database_folder}/`;
-            fs.readdirSync(directoryPath).forEach(fileName => {
-                const fileContent = fs.readFileSync(directoryPath + '/' + fileName, 'utf8');
-                const data = JSON.parse(fileContent);
-                jsondata.push(data)
-            });
-            // console.log(jsondata);
+            let data = require(datalocation)
+            jsondata = data
+            // console.log(data);
         } catch (e) {
-            console.log(e);
+            // console.log(e);
+            jsondata = []
             console.log("Data not found!");
         }
-        // console.log("Database exists")
     } else {
         fs.mkdir(`${config.fileinfo.database_folder}`, { recursive: true }, (e, d) => {
             if (e) throw e;
             console.log(`Database created`)
         })
-        fs.writeFileSync(`${config.fileinfo.database_folder}/${new Date().getMonth()}-${new Date().getFullYear()}.${config.fileinfo.database_file_extension}`, "")
+        fs.writeFileSync(`${config.fileinfo.database_folder}/${config.fileinfo.database_file}.${config.fileinfo.database_file_extension}`, "")
     }
+    // if (jsondata.length > 0) {
+    //     // some code
+    // } else {
+    //     console.log("Data not found")
+    //     process.exit(1)
+    // }
 }
 check()
-let datalocation = `${config.fileinfo.database_folder}/${new Date().getMonth()}-${new Date().getFullYear()}.${config.fileinfo.database_file_extension}`
-console.log(datalocation)
 
 const set = (data) => {
     jsondata.push(data);
@@ -39,6 +39,7 @@ const set = (data) => {
 }
 
 const get = (obj) => {
+    // console.log(obj)
     if (jsondata.length > 0) {
         if ((obj.else === "")) {
             return jsondata;
