@@ -8,6 +8,11 @@ const axios = require('axios')
 const config = require("./config.json");
 // console.clear()
 
+process.on('SIGINT', () => {
+    console.log('Process cancelled');
+    // Do something when the SIGINT signal is received
+});
+
 // const argv = process.argv.slice(2);
 const argv = process.argv;
 let input = ""
@@ -28,37 +33,37 @@ let query = input.split(/(\s+)/).filter(function (e) { return e.trim().length > 
 let loginfailedtimes = 0
 
 const init = () => {
-    let obj = config[0].userinfo;
-    if (config[0].userinfo.username === null) {
+    let obj = config.userinfo;
+    if (config.userinfo.username === null) {
         obj.username = require('prompt-sync')()('Username : ')
         if (obj.username === '') {
             obj.username = null
         }
     }
-    if (config[0].userinfo.password === null) {
+    if (config.userinfo.password === null) {
         obj.password = require('prompt-sync')().hide('Password : ')
         if (obj.password === '') {
             obj.password = null
         } else {
-            obj.password = CryptoJS.AES.encrypt(obj.password, config[0].secrets.CRYPTO_SECRET_KEY).toString();
+            obj.password = CryptoJS.AES.encrypt(obj.password, config.secrets.CRYPTO_SECRET_KEY).toString();
         }
     }
-    // if (config[0].userinfo.email === null) {
+    // if (config.userinfo.email === null) {
     //     obj.email = require('prompt-sync')()('Email : ')
     //     if (obj.email === '') {
     //         obj.email = null
     //     }
     // }
-    if (config[0].fileinfo.database_path === null) {
-        config[0].fileinfo.database_path = __dirname
+    if (config.fileinfo.database_path === null) {
+        config.fileinfo.database_path = __dirname
     }
-    config[0].userinfo = obj;
-    config[0].info = {
+    config.userinfo = obj;
+    config.info = {
         platform: os.platform(),
         hostname: os.hostname(),
         totalmem: os.totalmem(),
     }
-    config[0].permissions = {
+    config.permissions = {
         read: true,
         update: true,
         del: true,
@@ -67,10 +72,10 @@ const init = () => {
     }
     fs.writeFileSync("./config.json", JSON.stringify(config))
     globalpass = require('prompt-sync')().hide('Password : ')
-    var bytes = CryptoJS.AES.decrypt(config[0].userinfo.password, `${config[0].secrets.CRYPTO_SECRET_KEY}`);
+    var bytes = CryptoJS.AES.decrypt(config.userinfo.password, `${config.secrets.CRYPTO_SECRET_KEY}`);
     var originalPass = bytes.toString(CryptoJS.enc.Utf8);
     if (globalpass === originalPass) {
-        console.log(`Login as ${config[0].userinfo.username}`)
+        console.log(`Login as ${config.userinfo.username}`)
     } else {
         console.log(`Login failed`)
         loginfailedtimes++;
@@ -111,41 +116,41 @@ function timeSince(date) {
     return Math.floor(seconds) + " seconds";
 }
 
-if (argv[2] === "log" || argv[2] === "l") {
-    let inputdata = require('prompt-sync')()('[Log] # ')
-    // inputdata = CryptoJS.AES.encrypt(inputdata, `${config.crypto_secret_key}`).toString()
-    let pass = require('prompt-sync')().hide('[Pass] # (Null) ')
-    let query = inputdata.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
-    if (pass === "n" || pass === "N" || pass === "null" || pass === "" || pass === "Null") {
-        pass = null;
+if (argv[2] === "l") {
+    let title = require('prompt-sync')()('Title : ')
+    let body = require('prompt-sync')()('Body : ')
+    let category = require('prompt-sync')()('Category : ')
+    // let tag = require('prompt-sync')()('Tag : ')
+    let hidden = require('prompt-sync')()('Hidden (True/False) : ')
+    let titlequery = title.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
+    let bodyquery = body.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
+    category = category.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
+    if (hidden === "false" || hidden === "f" || hidden === "F" || hidden === "" || hidden === "FALSE") {
+        hidden = false;
+    } else {
+        hidden = true
     }
-    if (pass !== null) {
-        pass = CryptoJS.AES.encrypt(pass, `${config.crypto_secret_key}`).toString()
-    }
+    // if (pass !== null) {
+    //     pass = CryptoJS.AES.encrypt(pass, `${config.crypto_secret_key}`).toString()
+    // }
     let d = new Date()
-    const day = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
     let data = {
         id: Date.now().toString(36),
-        log: inputdata,
-        useuname: config[0].userinfo.username,
-        pass: config[0].userinfo.password,
+        useuname: config.userinfo.username,
+        pass: config.userinfo.password,
+        title: title,
+        body: body,
         fav: false,
         deleted: false,
-        query,
+        hidden: hidden,
+        category: category,
+        titlequery: titlequery,
+        bodyquery: bodyquery,
         lastupdated: null,
-        date: {
-            year: d.getFullYear(),
-            month: d.getMonth() + 1,
-            date: d.getDate(),
-            day: day[d.getDay()],
-            hour: d.getHours(),
-            minutes: d.getMinutes(),
-            seconds: d.getSeconds(),
-            time: d.toLocaleTimeString(),
-            now: Date.now(),
-        },
+        date: d,
+        now: Date.now(),
         ldate: d.toString(),
-        utc: d.toUTCString()
+        utc: d.toUTCString(),
     }
     const res = db.set(data)
     console.log(res)
