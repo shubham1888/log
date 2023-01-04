@@ -199,6 +199,7 @@ if (argv[2] === "l") {
     let inputdata = require('prompt-sync')()('Search : ')
     let query = inputdata.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
     let data = db.search(query)
+    // console.log(data)
     if (data) {
         data.map((i) => {
             if (!i.deleted) {

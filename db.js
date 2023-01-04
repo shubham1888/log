@@ -131,15 +131,35 @@ const del = (id) => {
     }
 }
 
-const search = (a) => {
+const search = (query) => {
     if (jsondata.length > 0) {
-        let arr = new Array();
         let result = []
         jsondata.map((i) => {
-            let temparr = i.query;
-            for (let j = 0; j < a.length; j++) {
-                for (let k = 0; k < temparr.length; k++) {
-                    if ((a[j] === i.query[k]) || (a[j] === i.query[k].substring(0, a[j].length)) || (a[j] === (i.query[k].substring(i.query[k].indexOf(a[j]), i.query[k].length)))) {
+            let titlequery = i.titlequery.map(str => str.toUpperCase());
+            let bodyquery = i.bodyquery.map(str => str.toUpperCase());
+            let category = i.category.map(str => str.toUpperCase());
+            query = query.map(str => str.toUpperCase());
+            for (let j = 0; j < query.length; j++) {
+                for (let k = 0; k < titlequery.length; k++) {
+                    if ((query[j] === titlequery[k]) || (query[j] === titlequery[k].substring(0, query[j].length)) || (query[j] === (titlequery[k].substring(titlequery[k].indexOf(query[j]),(titlequery[k].length-query[j].length)+1)))) {
+                        if (!(i.deleted)) {
+                            result.push(i)
+                        }
+                    }
+                }
+            }
+            for (let j = 0; j < query.length; j++) {
+                for (let k = 0; k < bodyquery.length; k++) {
+                    if ((query[j] === bodyquery[k]) || (query[j] === bodyquery[k].substring(0, query[j].length)) || (query[j] === (bodyquery[k].substring(bodyquery[k].indexOf(query[j]),(bodyquery[k].length-query[j].length)+1)))) {
+                        if (!(i.deleted)) {
+                            result.push(i)
+                        }
+                    }
+                }
+            }
+            for (let j = 0; j < query.length; j++) {
+                for (let k = 0; k < category.length; k++) {
+                    if ((query[j] === category[k]) || (query[j] === category[k].substring(0, query[j].length)) || (query[j] === (category[k].substring(category[k].indexOf(query[j]),(category[k].length-query[j].length)+1)))) {
                         if (!(i.deleted)) {
                             result.push(i)
                         }
