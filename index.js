@@ -195,7 +195,7 @@ if (argv[2] === "l") {
 } else if (argv[2] === "d") {
     let data = db.del(argv[3])
     console.log(data)
-} else if (argv[2] === "search" || argv[2] === "s") {
+} else if (argv[2] === "s") {
     let inputdata = require('prompt-sync')()('Search : ')
     let query = inputdata.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
     let data = db.search(query)
