@@ -128,7 +128,7 @@ if (argv[2] === "l") {
     let d = new Date()
     let data = {
         id: Date.now().toString(36),
-        useuname: config.userinfo.username,
+        username: config.userinfo.username,
         pass: config.userinfo.password,
         title: title,
         body: body,
@@ -182,6 +182,7 @@ if (argv[2] === "l") {
         data.map((i) => {
             if (!i.deleted) {
                 console.log(colors.green(`[ID] # ${i.id}`))
+                console.log(colors.green(`[Username] # ${i.username}`))
                 console.log(colors.green(`[Title] # ${i.title}`))
                 console.log(colors.yellow(`[Body] # ${i.body}`))
                 console.log(colors.cyan(`[Date] # ${i.ldate} [${timeSince(new Date(Date.now() - i.date.now))}]`))
@@ -202,6 +203,7 @@ if (argv[2] === "l") {
         data.map((i) => {
             if (!i.deleted) {
                 console.log(colors.green(`[ID] # ${i.id}`))
+                console.log(colors.green(`[Username] # ${i.username}`))
                 console.log(colors.green(`[Title] # ${i.title}`))
                 console.log(colors.yellow(`[Body] # ${i.body}`))
                 console.log(colors.cyan(`[Date] # ${i.ldate} [${timeSince(new Date(Date.now() - i.date.now))}]`))
