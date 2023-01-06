@@ -114,17 +114,12 @@ if (argv[2] === "l") {
     let category = require('prompt-sync')()('Category : ')
     // let tag = require('prompt-sync')()('Tag : ')
     let hidden = require('prompt-sync')()('Hidden (True/False) : ')
-    let titlequery = title.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
-    let bodyquery = body.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
     category = category.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
     if (hidden === "false" || hidden === "f" || hidden === "F" || hidden === "" || hidden === "FALSE") {
         hidden = false;
     } else {
         hidden = true
     }
-    // if (pass !== null) {
-    //     pass = CryptoJS.AES.encrypt(pass, `${config.crypto_secret_key}`).toString()
-    // }
     let d = new Date()
     let data = {
         id: Date.now().toString(36),
@@ -132,12 +127,10 @@ if (argv[2] === "l") {
         pass: config.userinfo.password,
         title: title,
         body: body,
+        category: category,
         fav: false,
         deleted: false,
         hidden: hidden,
-        category: category,
-        titlequery: titlequery,
-        bodyquery: bodyquery,
         lastupdated: null,
         date: d,
         now: Date.now(),
@@ -193,7 +186,8 @@ if (argv[2] === "l") {
         console.log([])
     }
 } else if (argv[2] === "d") {
-    let data = db.del(argv[3])
+    let delid = require('prompt-sync')()(colors.green('Delete ID : '))
+    let data = db.del(delid)
     console.log(data)
 } else if (argv[2] === "s") {
     let inputdata = require('prompt-sync')()('Search : ')
@@ -219,36 +213,35 @@ if (argv[2] === "l") {
     console.log(data)
 } else if (argv[2] === "u" || argv[2] === "update") {
     console.log(colors.red("[ID] [LOG] [Pass] [FAV] [DELETE] "))
-    let updateid = require('prompt-sync')()('[ID] # ')
-    let updatevalues = require('prompt-sync')()('[UPDATE values] # ')
-    let updatevalue = {
-        log: "updated second log",
-        // pass,
-        // fav, 
-        deleted: false,
-    }
-    let query = updatevalues.log.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
-    updatevalues.query = query;
-    // let data = db.update(updateid, updatevalues)
-    // console.log(data)
+    let uid = require('prompt-sync')()('ID : ')
+    let utitle = require('prompt-sync')()('Title : ')
+    let ubody = require('prompt-sync')()('Body : ')
+    let ucat = require('prompt-sync')()('Category : ')
+    ucatarr = ucat.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
+    let data = db.update(uid, utitle, ubody, ucatarr)
+    console.log(data)
 } else if (argv[2] === "a" || argv[2] === "append") {
-    let appendid = require('prompt-sync')()('[ID] # ')
-    let appendlogval = require('prompt-sync')()('[Log] # ')
-    let query = appendlogval.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
-    let data = db.append({ appendid, appendlogval, query })
+    let appendid = require('prompt-sync')()('ID : ')
+    let appendtitle = require('prompt-sync')()('Title : ')
+    let appendbody = require('prompt-sync')()('Body : ')
+    let appendcategory = require('prompt-sync')()('Category : ')
+    appendcategory = appendcategory.split(/(\s+)/).filter(function (e) { return e.trim().length > 0; });
+    let data = db.append({ appendid, appendtitle, appendbody, appendcategory })
     console.log(data)
 } else if (argv[2] === "e" || argv[2] === "export") {
-    let ml = require('prompt-sync')()('[Export all logs] # (y/n) ')
-    if ((ml.toUpperCase() == "Y") || (ml.toUpperCase() == "YES")) {
-        let res = db.exportlogs()
-        console.log(res)
+    let ml = require('prompt-sync')()('Export all logs : (y/n) ')
+    if ((ml.toUpperCase() == "Y") || (ml.toUpperCase() == "YES") || (ml.toUpperCase() == "")) {
+        let url = config.url.export_url
+        db.exportlogs(url).then((res) => {
+            console.log(res.data)
+        }).catch((e) => { console.log(e) })
     } else {
         console.log(colors.red('Export failed'))
     }
 } else if (argv[2] === "i" || argv[2] === "import") {
-    let url = require('prompt-sync')()(`[URL] (${config.default.import_url}) # `)
+    let url = require('prompt-sync')()(`URL : (${config.url.import_url}) `)
     if (url === "") {
-        url = config.default.import_url
+        url = config.url.import_url
     }
     // let res = db.importlogs(url)
     db.importlogs(url).then((data) => {
@@ -256,24 +249,32 @@ if (argv[2] === "l") {
             fs.writeFileSync(config.import_file_name, data.data)
             // fs.writeFileSync(config.import_info_file_name, data)
         } else {
-            fs.writeFileSync(config.import_file_name, JSON.stringify(data.data))
+            fs.writeFileSync(config.fileinfo.import_file_name, JSON.stringify(data.data))
             // fs.writeFileSync(config.import_info_file_name, data)
         }
         console.log({ msg: 'Imported successfully file - import.json' })
     });
 } else if (argv[2] === "get") {
     const getres = async () => {
-        let url = require('prompt-sync')()('[URL] # ')
+        let n = 0
+        for (let i = 0; i < config.url.import_url.length; i++) {
+            const e = config.url.import_url[i];
+            console.log(i + 1, e)
+            n = i + 1
+        }
+        let url = require('prompt-sync')()(`URL (${config.url.import_url[0]}) : `)
+        if (url === "") {
+            url = config.url.import_url[0]
+        }
         // let data = await db.getreq(url)
         let data = await axios.get(url)
-        // let json = data.json()
         console.log(data.data)
     }
     getres()
 } else if (argv[2] === "post") {
     const postdata = async () => {
-        let url = require('prompt-sync')()('[URL] # ')
-        let data = require('prompt-sync')()('[Data] # ')
+        let url = require('prompt-sync')()('URL : ')
+        let data = require('prompt-sync')()('Data : ')
         if (typeof (data) === "string") {
             data = JSON.parse(data)
         }

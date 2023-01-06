@@ -174,50 +174,29 @@ const search = (query) => {
     }
 }
 
-const update = (id, { log, pass, fav, deleted, query }) => {
+const update = (uid, utitle, ubody, ucatarr) => {
     // console.log(id, log, pass, fav, deleted, query)
     let returnarr = []
     let updatereturnid;
     if (jsondata.length > 0) {
         jsondata.map((i) => {
-            if (i.id === id) {
-                let passlength;
+            if (i.id === uid) {
                 updatereturnid = i.id
-                try {
-                    passlength = pass.length
-                } catch (err) {
-                    passlength = 0
+                if (utitle) {
+                    i.title = utitle
+                    returnarr.push(`Updated ID:${i.uid} log ${i.title} -> ${utitle}`)
                 }
-                if (pass === null || passlength) {
-                    i.pass = pass
-                    returnarr.push(`Updated ID:${i.id} Pass ${i.pass} -> ${pass}`)
+                if (ubody) {
+                    i.body = ubody
+                    returnarr.push(`Updated ID:${i.uid} query ${i.body} -> ${ubody}`)
                 }
-                if (deleted === true) {
-                    i.deleted = deleted
-                    returnarr.push(`Updated ID:${i.id} Deleted ${i.deleted} -> ${deleted}`)
-                }
-                if (deleted === false) {
-                    i.deleted = deleted
-                    returnarr.push(`Updated ID:${i.id} Deleted ${i.deleted} -> ${deleted}`)
-                }
-                if (fav === true) {
-                    i.fav = fav
-                    returnarr.push(`Updated ID:${i.id} Fav ${i.fav} -> ${fav}`)
-                }
-                if (fav === false) {
-                    i.fav = fav
-                    returnarr.push(`Updated ID:${i.id} Fav ${i.fav} -> ${fav}`)
-                }
-                if (log) {
-                    i.log = log
-                    returnarr.push(`Updated ID:${i.id} log ${i.log} -> ${log}`)
-                }
-                if (query) {
-                    i.query = query
-                    returnarr.push(`Updated ID:${i.id} query ${i.query} -> ${query}`)
+                if (ucatarr) {
+                    i.category = ucatarr
+                    returnarr.push(`Updated ID:${i.uid} query ${i.category} -> ${ucatarr}`)
                 }
             }
         })
+        fs.writeFileSync(datalocation, JSON.stringify(jsondata))
         returnarr.push(updatereturnid)
         return returnarr;
     } else {
@@ -239,14 +218,15 @@ const list = () => {
     }
 }
 
-const append = ({ appendid, appendlogval, query }) => {
+const append = ({ appendid, appendtitle, appendbody, appendcategory }) => {
     let id = ''
     if (jsondata.length > 0) {
         jsondata.map((i) => {
             if (i.id == appendid) {
-                i.log += appendlogval
-                query.map((j) => {
-                    i.query.push(j)
+                i.title += " " + appendtitle
+                i.body += " " + appendbody
+                appendcategory.map((j) => {
+                    i.category.push(j)
                 })
                 id = i.id
                 fs.writeFileSync(datalocation, JSON.stringify(jsondata))
@@ -258,20 +238,14 @@ const append = ({ appendid, appendlogval, query }) => {
     }
 }
 
-const exportlogs = async () => {
+const exportlogs = async (url) => {
     if (jsondata.length > 0) {
         let res;
-        res = jsondata.map(async (i) => {
-            await fetch("https://server.shubham1888.repl.co/setlogs", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(jsondata)
-            })
-            // .then(res => {
-            //     return { res: res }
-            // });
+        // res = axios.post(config.url.export_url, JSON.stringify(jsondata))
+        jsondata.map((i) => {
+            res = axios.post(url, i)
         })
-        return { msg: 'Logs migrated successfully' }
+        return res
     } else {
         return []
     }

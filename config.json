@@ -13,7 +13,8 @@
         "database_path": "/home/shubham/programs/log"
     },
     "url": {
-        "import_url": "https://server.shubham1888.repl.co/getpost"
+        "import_url": "https://api.shubham1888.repl.co/api/log/get",
+        "export_url": "https://api.shubham1888.repl.co/api/log/post"
     },
     "secrets": {
         "CRYPTO_SECRET_KEY": "mycryptopass",
