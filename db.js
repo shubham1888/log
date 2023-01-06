@@ -142,27 +142,21 @@ const search = (query) => {
             for (let j = 0; j < query.length; j++) {
                 for (let k = 0; k < titlequery.length; k++) {
                     if ((query[j] === titlequery[k]) || (query[j] === titlequery[k].substring(0, query[j].length)) || (query[j] === (titlequery[k].substring(titlequery[k].indexOf(query[j]), (titlequery[k].length - query[j].length) + 1)))) {
-                        if (!(i.deleted)) {
-                            result.push(i)
-                        }
+                        result.push(i)
                     }
                 }
             }
             for (let j = 0; j < query.length; j++) {
                 for (let k = 0; k < bodyquery.length; k++) {
                     if ((query[j] === bodyquery[k]) || (query[j] === bodyquery[k].substring(0, query[j].length)) || (query[j] === (bodyquery[k].substring(bodyquery[k].indexOf(query[j]), (bodyquery[k].length - query[j].length) + 1)))) {
-                        if (!(i.deleted)) {
-                            result.push(i)
-                        }
+                        result.push(i)
                     }
                 }
             }
             for (let j = 0; j < query.length; j++) {
                 for (let k = 0; k < category.length; k++) {
                     if ((query[j] === category[k]) || (query[j] === category[k].substring(0, query[j].length)) || (query[j] === (category[k].substring(category[k].indexOf(query[j]), (category[k].length - query[j].length) + 1)))) {
-                        if (!(i.deleted)) {
-                            result.push(i)
-                        }
+                        result.push(i)
                     }
                 }
             }
@@ -208,9 +202,7 @@ const list = () => {
     let arr = []
     if (jsondata.length > 0) {
         jsondata.map((i) => {
-            if (!(i.deleted)) {
-                arr.push(i.id)
-            }
+            arr.push(i.id)
         })
         return arr;
     } else {

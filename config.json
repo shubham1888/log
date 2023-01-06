@@ -1,7 +1,7 @@
 {
     "userinfo": {
-        "username": "shubham shah",
-        "password": "U2FsdGVkX18jIuczSxB4n6QxCA0lgvzTl1GoKZNMp/4=",
+        "username": null,
+        "password": null,
         "email": null
     },
     "fileinfo": {
@@ -10,11 +10,14 @@
         "database_file_extension": "json",
         "import_file_name": "import.json",
         "import_info_file_name": "import.json",
-        "database_path": "/home/shubham/programs/log"
+        "database_path": null
     },
     "url": {
         "import_url": "https://api.shubham1888.repl.co/api/log/get",
-        "export_url": "https://api.shubham1888.repl.co/api/log/post"
+        "export_url": "https://api.shubham1888.repl.co/api/log/post",
+        "del_url": "https://api.shubham1888.repl.co/api/log/del",
+        "update_url": "https://api.shubham1888.repl.co/api/log/update",
+        "api_url": "https://api.shubham1888.repl.co/"
     },
     "secrets": {
         "CRYPTO_SECRET_KEY": "mycryptopass",
@@ -22,9 +25,9 @@
     },
     "logs": [],
     "info": {
-        "platform": "linux",
-        "hostname": "kali",
-        "totalmem": 3801595904
+        "platform": null,
+        "hostname": null,
+        "totalmem": null
     },
     "permissions": {
         "read": true,

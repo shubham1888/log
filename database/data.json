@@ -87,13 +87,14 @@
         "id": "lcgu6ylm",
         "username": "shubham shah",
         "pass": "U2FsdGVkX18jIuczSxB4n6QxCA0lgvzTl1GoKZNMp/4=",
-        "title": "fourth log",
-        "body": "",
+        "title": "updated title",
+        "body": "new body ",
         "fav": false,
         "deleted": false,
         "hidden": false,
         "category": [
-            "testing"
+            "testing",
+            "update"
         ],
         "titlequery": [
             "fourth",
@@ -281,6 +282,45 @@
         "now": 1672884603256,
         "ldate": "Thu Jan 05 2023 07:55:03 GMT+0545 (Nepal Time)",
         "utc": "Thu, 05 Jan 2023 02:10:03 GMT",
+        "updates": []
+    },
+    {
+        "id": "lck2yloe",
+        "username": "shubham shah",
+        "pass": "U2FsdGVkX18jIuczSxB4n6QxCA0lgvzTl1GoKZNMp/4=",
+        "title": "my new log",
+        "body": "",
+        "category": [
+            "testing"
+        ],
+        "fav": false,
+        "deleted": false,
+        "hidden": false,
+        "lastupdated": null,
+        "date": "2023-01-06T05:32:11.198Z",
+        "now": 1672983131198,
+        "ldate": "Fri Jan 06 2023 11:17:11 GMT+0545 (Nepal Time)",
+        "utc": "Fri, 06 Jan 2023 05:32:11 GMT",
+        "updates": []
+    },
+    {
+        "id": "lck32jso",
+        "username": "shubham shah",
+        "pass": "U2FsdGVkX18jIuczSxB4n6QxCA0lgvzTl1GoKZNMp/4=",
+        "title": "testing hidden",
+        "body": "testing hidden body",
+        "category": [
+            "testing",
+            "hidden"
+        ],
+        "fav": false,
+        "deleted": false,
+        "hidden": true,
+        "lastupdated": null,
+        "date": "2023-01-06T05:35:15.384Z",
+        "now": 1672983315384,
+        "ldate": "Fri Jan 06 2023 11:20:15 GMT+0545 (Nepal Time)",
+        "utc": "Fri, 06 Jan 2023 05:35:15 GMT",
         "updates": []
     }
 ]
