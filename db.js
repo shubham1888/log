@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 const fs = require("node:fs")
 const config = require("./config.json")
-const axios = require("axios")
+try {
+    const axios = require("axios")
+} catch (error) {}
 
 let jsondata = []
 let datalocation = `./${config.fileinfo.database_folder}/${config.fileinfo.database_file}.${config.fileinfo.database_file_extension}`
@@ -160,6 +162,9 @@ const search = (query) => {
                     }
                 }
             }
+            if (i.id.toUpperCase() === query) {
+                result.push(i)
+            }
         })
         let qdata = [...new Set(result)]
         return qdata
@@ -178,21 +183,20 @@ const update = (uid, utitle, ubody, ucatarr) => {
                 updatereturnid = i.id
                 if (utitle) {
                     i.title = utitle
-                    returnarr.push(`Updated ID:${i.uid} log ${i.title} -> ${utitle}`)
+                    // returnarr.push(`Updated ID:${i.id} log ${i.title} -> ${utitle}`)
                 }
                 if (ubody) {
                     i.body = ubody
-                    returnarr.push(`Updated ID:${i.uid} query ${i.body} -> ${ubody}`)
+                    // returnarr.push(`Updated ID:${i.id} query ${i.body} -> ${ubody}`)
                 }
                 if (ucatarr) {
                     i.category = ucatarr
-                    returnarr.push(`Updated ID:${i.uid} query ${i.category} -> ${ucatarr}`)
+                    // returnarr.push(`Updated ID:${i.id} query ${i.category} -> ${ucatarr}`)
                 }
             }
         })
         fs.writeFileSync(datalocation, JSON.stringify(jsondata))
-        returnarr.push(updatereturnid)
-        return returnarr;
+        return updatereturnid;
     } else {
         return []
     }

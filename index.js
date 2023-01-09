@@ -4,13 +4,15 @@ const os = require("node:os")
 const fs = require("node:fs")
 const colors = require('ansi-colors');
 const CryptoJS = require("crypto-js");
-const axios = require('axios')
 const config = require("./config.json");
+try {
+    const axios = require('axios')
+} catch (error) {}
 
 // const argv = process.argv.slice(2);
 const argv = process.argv;
 // suppose user is giving log g then to wake up server requert is pre made
-axios.get(config.url.api_url)
+axios.get(config.url.api_url).then(res => console.log('')).catch(err => console.log(""))
 
 function timeSince(date) {
     date = new Date(Date.now() - date);
@@ -51,10 +53,29 @@ const printdata = (data) => {
                     console.log(colors.red(`[Body]     # Hidden`))
                 } else {
                     console.log(colors.green(`[Title]    # ${i.title}`))
-                    console.log(colors.yellow(`[Body]    # ${i.body}`))
+                    console.log(colors.yellow(`[Body]     # ${i.body}`))
                 }
-                console.log(colors.cyan(`[Date]     # ${i.ldate} [${timeSince(new Date(Date.now() - i.now))}]`))
+                console.log(colors.cyan(`[Date]     # [${timeSince(new Date(Date.now() - i.now))}] ${i.ldate}`))
                 console.log(colors.red("--------------------------------------------------------"))
+            }
+        })
+    } else {
+        console.log([])
+    }
+}
+
+const showHiddenData = (data) => {
+    if (data) {
+        data.map((i) => {
+            if (!i.deleted) {
+                if (i.hidden) {
+                    console.log(colors.gray(`[ID]       # ${i.id}`))
+                    console.log(colors.blue(`[Username] # ${i.username}`))
+                    console.log(colors.red(`[Title]    # ${i.title}`))
+                    console.log(colors.red(`[Body]     # ${i.body}`))
+                    console.log(colors.cyan(`[Date]     # [${timeSince(new Date(Date.now() - i.now))}] ${i.ldate}`))
+                    console.log(colors.red("--------------------------------------------------------"))
+                }
             }
         })
     } else {
@@ -230,6 +251,13 @@ const main = async () => {
         }
         fs.writeFileSync("./config.json", JSON.stringify(config))
         console.log(colors.green("Reset all data successfully"))
+    } else if (argv[2] === "show") {
+        let res = db.get({ else: "" })
+        showHiddenData(res)
+    } else if ((argv[2] === "whoami") || (argv[2] === "profile")) {
+        console.log("username : ", config.userinfo.username)
+        console.log("Password : ", config.userinfo.password)
+        console.log("Email    : ", config.userinfo.email)
     }
     else {
         console.log("Bad command!")
