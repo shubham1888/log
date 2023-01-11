@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 const fs = require("node:fs")
 const config = require("./config.json")
-try {
-    const axios = require("axios")
-} catch (error) {}
+const axios = require("axios")
 
 let jsondata = []
 let datalocation = `./${config.fileinfo.database_folder}/${config.fileinfo.database_file}.${config.fileinfo.database_file_extension}`

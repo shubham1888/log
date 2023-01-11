@@ -5,9 +5,7 @@ const fs = require("node:fs")
 const colors = require('ansi-colors');
 const CryptoJS = require("crypto-js");
 const config = require("./config.json");
-try {
-    const axios = require('axios')
-} catch (error) {}
+const axios = require('axios')
 
 // const argv = process.argv.slice(2);
 const argv = process.argv;
